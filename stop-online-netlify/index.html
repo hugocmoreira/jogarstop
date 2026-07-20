@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>STOP! Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#161C33;
+    --ink-2:#1F2947;
+    --ink-3:#2A365C;
+    --paper:#F7F1E1;
+    --paper-line:#E4D9BC;
+    --gold:#F2B33D;
+    --gold-deep:#D9922A;
+    --coral:#E85B3C;
+    --coral-deep:#C1442A;
+    --mint:#49C58A;
+    --mint-deep:#2FA06D;
+    --ash:#93A0C4;
+    --text:#F3EEDF;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% -10%, #26325A 0%, transparent 55%),
+      radial-gradient(circle at 110% 10%, #2A2050 0%, transparent 45%),
+      var(--ink);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:0;
+  }
+  #app{
+    width:100%;
+    max-width:460px;
+    min-height:100vh;
+    padding:18px 16px 28px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+  h1,h2,h3{font-family:'Baloo 2',sans-serif;margin:0;}
+  .brand{
+    display:flex;align-items:center;gap:10px;margin-bottom:18px;
+  }
+  .brand .mark{
+    width:38px;height:38px;border-radius:10px;
+    background:linear-gradient(155deg,var(--gold),var(--coral));
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Baloo 2';font-weight:800;font-size:19px;color:var(--ink);
+    transform:rotate(-6deg);
+    box-shadow:0 4px 0 rgba(0,0,0,.25);
+  }
+  .brand .title{font-size:22px;font-weight:800;letter-spacing:.5px;}
+  .brand .title span{color:var(--gold);}
+
+  .card{
+    background:var(--ink-2);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:var(--radius);
+    padding:18px;
+    margin-bottom:14px;
+  }
+  .paper-card{
+    background:var(--paper);
+    color:#25200f;
+    border-radius:var(--radius);
+    padding:16px;
+    margin-bottom:12px;
+    box-shadow:0 3px 0 var(--paper-line), inset 0 0 0 1px rgba(0,0,0,.03);
+  }
+  label.field-label{
+    display:block;font-size:12px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--ash);margin-bottom:6px;
+  }
+  input[type=text]{
+    width:100%;
+    background:var(--ink-3);
+    border:1.5px solid rgba(255,255,255,.08);
+    color:var(--text);
+    font-family:'Inter';font-size:16px;font-weight:600;
+    padding:13px 14px;border-radius:12px;outline:none;
+    transition:border-color .15s;
+  }
+  input[type=text]:focus{border-color:var(--gold);}
+  input[type=text]::placeholder{color:#5c6690;font-weight:500;}
+  .paper-card input[type=text]{
+    background:#fffef9;color:#2b2413;border:1.5px solid var(--paper-line);
+  }
+  .paper-card input[type=text]:focus{border-color:var(--coral);}
+
+  button{font-family:'Inter';cursor:pointer;border:none;outline:none;}
+  .btn{
+    width:100%;padding:15px 18px;border-radius:14px;
+    font-weight:800;font-size:16px;font-family:'Baloo 2';
+    letter-spacing:.3px;
+    transition:transform .08s ease, filter .15s;
+  }
+  .btn:active{transform:translateY(2px);}
+  .btn-primary{
+    background:linear-gradient(180deg,var(--gold),var(--gold-deep));
+    color:#241a04; box-shadow:0 4px 0 #8c5f10;
+  }
+  .btn-primary:active{box-shadow:0 1px 0 #8c5f10;}
+  .btn-ghost{
+    background:transparent;color:var(--text);
+    border:1.5px solid rgba(255,255,255,.18);
+  }
+  .btn-mint{
+    background:linear-gradient(180deg,var(--mint),var(--mint-deep));
+    color:#062d1c;box-shadow:0 4px 0 #1c6a48;
+  }
+  .btn-mint:active{box-shadow:0 1px 0 #1c6a48;}
+  .btn-sm{width:auto;padding:9px 16px;font-size:13px;border-radius:10px;}
+  .btn:disabled{opacity:.4;filter:grayscale(.4);cursor:not-allowed;}
+
+  .row{display:flex;gap:10px;}
+  .muted{color:var(--ash);font-size:13.5px;line-height:1.5;}
+  .center{text-align:center;}
+
+  /* HOME */
+  .toggle-group{display:flex;gap:8px;margin-bottom:16px;}
+  .toggle-btn{
+    flex:1;padding:11px;border-radius:12px;font-weight:700;font-size:14px;
+    background:var(--ink-3);color:var(--ash);border:1.5px solid transparent;
+  }
+  .toggle-btn.active{background:rgba(242,179,61,.12);color:var(--gold);border-color:var(--gold);}
+
+  /* LOBBY */
+  .room-code-box{
+    background:linear-gradient(155deg,#2C2350,#1B2A4A);
+    border-radius:var(--radius);
+    padding:22px 18px;text-align:center;margin-bottom:14px;
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .room-code{
+    font-family:'JetBrains Mono';font-weight:700;font-size:38px;
+    letter-spacing:8px;color:var(--gold);margin:4px 0 10px;
+  }
+  .player-chip{
+    display:flex;align-items:center;gap:10px;
+    background:var(--ink-3);border-radius:12px;padding:10px 12px;margin-bottom:8px;
+  }
+  .avatar{
+    width:34px;height:34px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Baloo 2';font-weight:700;color:#1a1a1a;font-size:15px;
+  }
+  .cat-grid{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px;}
+  .cat-chip{
+    padding:8px 13px;border-radius:20px;font-size:13px;font-weight:700;
+    background:var(--ink-3);color:var(--ash);border:1.5px solid transparent;
+  }
+  .cat-chip.on{background:rgba(73,197,138,.14);color:var(--mint);border-color:var(--mint);}
+  .stepper{display:flex;align-items:center;gap:14px;}
+  .stepper button{
+    width:36px;height:36px;border-radius:50%;background:var(--ink-3);
+    color:var(--text);font-size:18px;font-weight:700;
+  }
+  .stepper .val{font-family:'JetBrains Mono';font-weight:700;font-size:17px;min-width:44px;text-align:center;}
+
+  /* PLAYING */
+  .hero{display:flex;flex-direction:column;align-items:center;margin:6px 0 18px;}
+  .ring-wrap{position:relative;width:150px;height:150px;margin-bottom:8px;}
+  .ring{
+    width:100%;height:100%;border-radius:50%;
+    background:conic-gradient(var(--gold) calc(var(--progress,1)*360deg), rgba(255,255,255,.08) 0deg);
+    display:flex;align-items:center;justify-content:center;
+    transition:background .3s linear;
+  }
+  .letter-tile{
+    width:112px;height:112px;border-radius:22px;
+    background:linear-gradient(160deg,#FFE9B0,var(--gold) 55%,var(--gold-deep));
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Baloo 2';font-weight:800;font-size:56px;color:#3a2604;
+    box-shadow:0 6px 0 #8c5f10, inset 0 -4px 10px rgba(0,0,0,.12);
+    transform:rotate(-3deg);
+  }
+  .letter-tile.flip{animation:flipIn .5s ease;}
+  @keyframes flipIn{
+    0%{transform:rotateY(90deg) rotate(-3deg);opacity:0;}
+    60%{transform:rotateY(-12deg) rotate(-3deg);opacity:1;}
+    100%{transform:rotateY(0) rotate(-3deg);}
+  }
+  .timer-txt{
+    font-family:'JetBrains Mono';font-weight:700;font-size:15px;color:var(--ash);
+    letter-spacing:.05em;
+  }
+  .timer-txt.low{color:var(--coral);}
+
+  .cat-input-card{margin-bottom:10px;}
+  .cat-input-card .field-label{color:#8a7b4c;}
+  .stop-bar{
+    position:sticky;bottom:0;padding-top:12px;margin-top:auto;
+  }
+  .stop-btn{
+    width:100%;padding:20px;border-radius:16px;
+    background:radial-gradient(circle at 30% 25%, #FF7A55, var(--coral) 55%, var(--coral-deep));
+    color:#fff;font-family:'Baloo 2';font-weight:800;font-size:26px;letter-spacing:2px;
+    box-shadow:0 6px 0 #7c2513, 0 0 0 4px rgba(232,91,60,.18);
+    border:3px solid rgba(255,255,255,.5);
+  }
+  .stop-btn:active{transform:translateY(3px);box-shadow:0 3px 0 #7c2513;}
+
+  .scoreboard{
+    display:flex;gap:8px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px;
+  }
+  .score-pill{
+    flex-shrink:0;background:var(--ink-3);border-radius:12px;padding:7px 11px;
+    display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;
+  }
+  .score-pill .pts{color:var(--gold);font-family:'JetBrains Mono';}
+
+  /* RESULTS */
+  .result-cat{margin-bottom:12px;}
+  .result-cat h3{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--gold);margin-bottom:8px;}
+  .result-row{
+    display:flex;align-items:center;gap:10px;background:var(--ink-3);
+    border-radius:10px;padding:9px 11px;margin-bottom:6px;
+  }
+  .result-row .ans{flex:1;font-weight:600;font-size:14.5px;}
+  .result-row.invalid .ans{color:#6d7699;text-decoration:line-through;}
+  .pts-chip{
+    font-family:'JetBrains Mono';font-weight:700;font-size:12.5px;
+    padding:3px 9px;border-radius:8px;
+  }
+  .pts-chip.p10{background:rgba(73,197,138,.16);color:var(--mint);}
+  .pts-chip.p5{background:rgba(242,179,61,.16);color:var(--gold);}
+  .pts-chip.p0{background:rgba(147,160,196,.12);color:var(--ash);}
+
+  .leader-row{
+    display:flex;align-items:center;gap:12px;padding:11px 12px;
+    background:var(--ink-3);border-radius:12px;margin-bottom:7px;
+  }
+  .leader-row .pos{font-family:'Baloo 2';font-weight:800;font-size:17px;color:var(--ash);width:22px;}
+  .leader-row.top1{background:linear-gradient(90deg,rgba(242,179,61,.18),transparent);}
+  .leader-row.top1 .pos{color:var(--gold);}
+  .leader-row .nm{flex:1;font-weight:700;}
+  .leader-row .sc{font-family:'JetBrains Mono';font-weight:700;color:var(--gold);}
+
+  .toast{
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    background:#2A365C;color:#fff;padding:11px 18px;border-radius:12px;
+    font-size:13.5px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.4);
+    z-index:50;max-width:88%;text-align:center;border:1px solid rgba(255,255,255,.1);
+    opacity:0;transition:opacity .25s, transform .25s;pointer-events:none;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
+
+  .badge-host{
+    font-size:10px;font-weight:800;background:rgba(242,179,61,.18);color:var(--gold);
+    padding:2px 7px;border-radius:6px;letter-spacing:.04em;
+  }
+  .hint{font-size:11.5px;color:var(--ash);text-align:center;margin-top:6px;}
+  a.link-reset{color:var(--gold);text-decoration:underline;cursor:pointer;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast"></div>
+
+<script>
+/* ============ CONFIG ============ */
+const LETTERS = 'ABCDEFGHIJLMNOPQRSTUVXZ'.split(''); // exclui K, W, Y (raras no jogo clássico)
+const AVATAR_COLORS = ['#F2B33D','#E85B3C','#49C58A','#7FA8FF','#E081C7','#FFD166'];
+const ALL_CATEGORIES = ['Nome','Sobrenome','Animal','Cor','Fruta','Objeto','Cidade','País','Comida','Profissão','Marca','Filme ou Série','Time de Futebol','Parte do Corpo'];
+const DEFAULT_CATEGORIES = ['Nome','Animal','Cor','Fruta','Objeto','Cidade'];
+
+/* ============ LOCAL SESSION STATE ============ */
+const S = {
+  myId: 'p_' + Math.random().toString(36).slice(2,10),
+  myName: '',
+  roomCode: null,
+  room: null,
+  isHost: false,
+  screen: 'home', // home
+  homeMode: 'create', // create | join
+  joinCodeInput: '',
+  draftAnswers: {},
+  submittedRound: -1,
+  pollHandle: null,
+  hostTickHandle: null,
+  localSettings: {
+    categories: [...DEFAULT_CATEGORIES],
+    rounds: 5,
+    timeLimit: 60
+  },
+  stampAnim: false,
+  lastLetter: null,
+};
+
+/* ============ STORAGE HELPERS ============ */
+async function getRoom(code){
+  try{
+    const res = await fetch('/api/room?code=' + encodeURIComponent(code), {cache:'no-store'});
+    if(!res.ok) return null;
+    const data = await res.json();
+    return data || null;
+  }catch(e){
+    return null;
+  }
+}
+async function setRoom(code, obj){
+  try{
+    const res = await fetch('/api/room', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({code, room: obj})
+    });
+    return res.ok;
+  }catch(e){
+    return false;
+  }
+}
+
+function genCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let c = '';
+  for(let i=0;i<4;i++) c += chars[Math.floor(Math.random()*chars.length)];
+  return c;
+}
+function normalize(str){
+  return (str||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._h);
+  showToast._h = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+function avatarColor(id){
+  let h=0; for(const c of id) h += c.charCodeAt(0);
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+function initials(name){
+  return (name||'?').trim().slice(0,2).toUpperCase();
+}
+
+/* ============ ROOM ACTIONS ============ */
+async function createRoom(){
+  if(!S.myName.trim()){ showToast('Digite seu nome primeiro'); return; }
+  const code = genCode();
+  const room = {
+    code,
+    hostId: S.myId,
+    status: 'lobby',
+    players: [{id:S.myId, name:S.myName.trim(), score:0}],
+    settings: null,
+    round: 0,
+    letter: null,
+    usedLetters: [],
+    roundStartedAt: null,
+    stoppedAt: null,
+    stopDeadline: null,
+    stoppedBy: null,
+    answers: {},
+    roundResults: null,
+    createdAt: Date.now()
+  };
+  const ok = await setRoom(code, room);
+  if(!ok){ showToast('Não foi possível criar a sala. Tente de novo.'); return; }
+  S.roomCode = code;
+  S.isHost = true;
+  S.room = room;
+  startPolling();
+  render();
+}
+
+async function joinRoom(){
+  const code = S.joinCodeInput.trim().toUpperCase();
+  if(!S.myName.trim()){ showToast('Digite seu nome primeiro'); return; }
+  if(code.length < 4){ showToast('Digite o código da sala'); return; }
+  const room = await getRoom(code);
+  if(!room){ showToast('Sala não encontrada'); return; }
+  if(room.status !== 'lobby'){ showToast('Essa sala já começou a jogar'); return; }
+  if(room.players.length >= 4){ showToast('Sala cheia (máximo 4 jogadores)'); return; }
+
+  let name = S.myName.trim();
+  const existingNames = room.players.map(p=>normalize(p.name));
+  if(existingNames.includes(normalize(name))){
+    let n = 2;
+    while(existingNames.includes(normalize(name+' ('+n+')'))) n++;
+    name = name + ' (' + n + ')';
+  }
+  room.players.push({id:S.myId, name, score:0});
+  const ok = await setRoom(code, room);
+  if(!ok){ showToast('Erro ao entrar na sala. Tente de novo.'); return; }
+  S.roomCode = code;
+  S.isHost = (room.hostId === S.myId);
+  S.room = room;
+  startPolling();
+  render();
+}
+
+async function submitAnswersIfNeeded(){
+  if(!S.room) return;
+  if(S.submittedRound === S.room.round) return;
+  S.submittedRound = S.room.round;
+  for(let attempt=0; attempt<3; attempt++){
+    const fresh = await getRoom(S.roomCode);
+    if(!fresh || fresh.status==='lobby') return;
+    fresh.answers = fresh.answers || {};
+    fresh.answers[S.myId] = {...S.draftAnswers};
+    const ok = await setRoom(S.roomCode, fresh);
+    if(ok){ S.room = fresh; break; }
+  }
+}
+
+async function pressStop(){
+  const fresh = await getRoom(S.roomCode);
+  if(!fresh || fresh.status !== 'playing') return;
+  fresh.status = 'stopped';
+  fresh.stoppedBy = S.myId;
+  fresh.stoppedAt = Date.now();
+  fresh.stopDeadline = Date.now() + 2500;
+  await setRoom(S.roomCode, fresh);
+  S.room = fresh;
+  S.stampAnim = true;
+  await submitAnswersIfNeeded();
+  render();
+}
+
+function toggleCategory(cat){
+  const idx = S.localSettings.categories.indexOf(cat);
+  if(idx>=0){
+    if(S.localSettings.categories.length>3) S.localSettings.categories.splice(idx,1);
+    else showToast('Escolha pelo menos 3 categorias');
+  } else {
+    if(S.localSettings.categories.length<10) S.localSettings.categories.push(cat);
+    else showToast('Máximo de 10 categorias');
+  }
+  render();
+}
+
+function pickLetter(used){
+  const avail = LETTERS.filter(l=>!used.includes(l));
+  const pool = avail.length ? avail : LETTERS;
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+async function startGame(){
+  const fresh = await getRoom(S.roomCode);
+  if(!fresh) return;
+  fresh.settings = {
+    categories: [...S.localSettings.categories],
+    rounds: S.localSettings.rounds,
+    timeLimit: S.localSettings.timeLimit
+  };
+  await beginRound(fresh, 1);
+}
+
+async function beginRound(freshRoom, roundNum){
+  const letter = pickLetter(freshRoom.usedLetters);
+  freshRoom.round = roundNum;
+  freshRoom.letter = letter;
+  freshRoom.usedLetters = [...freshRoom.usedLetters, letter];
+  freshRoom.status = 'playing';
+  freshRoom.roundStartedAt = Date.now();
+  freshRoom.stoppedAt = null;
+  freshRoom.stopDeadline = null;
+  freshRoom.stoppedBy = null;
+  freshRoom.answers = {};
+  freshRoom.roundResults = null;
+  await setRoom(S.roomCode, freshRoom);
+  S.room = freshRoom;
+  S.draftAnswers = {};
+  render();
+}
+
+function computeRoundScores(room){
+  const {answers, letter, players, settings} = room;
+  const letterNorm = normalize(letter);
+  const details = {};
+  const roundPoints = {};
+  players.forEach(p=>roundPoints[p.id]=0);
+  settings.categories.forEach(cat=>{
+    const entries = players.map(p=>{
+      const raw = (answers[p.id] && answers[p.id][cat]) || '';
+      const norm = normalize(raw);
+      const valid = norm.length>0 && norm[0]===letterNorm;
+      return {playerId:p.id, raw, norm, valid};
+    });
+    const freq = {};
+    entries.forEach(e=>{ if(e.valid) freq[e.norm]=(freq[e.norm]||0)+1; });
+    const catDetail = {};
+    entries.forEach(e=>{
+      let pts = 0;
+      if(e.valid) pts = freq[e.norm]===1 ? 10 : 5;
+      catDetail[e.playerId] = {text:e.raw, valid:e.valid, points:pts};
+      roundPoints[e.playerId] += pts;
+    });
+    details[cat] = catDetail;
+  });
+  return {details, roundPoints};
+}
+
+async function hostFinalizeScoring(){
+  const fresh = await getRoom(S.roomCode);
+  if(!fresh || fresh.status !== 'stopped') return;
+  const {details, roundPoints} = computeRoundScores(fresh);
+  fresh.players = fresh.players.map(p=>({...p, score:(p.score||0)+(roundPoints[p.id]||0)}));
+  fresh.roundResults = {details, roundPoints};
+  fresh.status = 'results';
+  await setRoom(S.roomCode, fresh);
+  S.room = fresh;
+  render();
+}
+
+async function nextRoundOrFinish(){
+  const fresh = await getRoom(S.roomCode);
+  if(!fresh) return;
+  if(fresh.round >= fresh.settings.rounds){
+    fresh.status = 'finished';
+    await setRoom(S.roomCode, fresh);
+    S.room = fresh;
+    render();
+  } else {
+    await beginRound(fresh, fresh.round+1);
+  }
+}
+
+async function restartGame(){
+  const fresh = await getRoom(S.roomCode);
+  if(!fresh) return;
+  fresh.players = fresh.players.map(p=>({...p, score:0}));
+  fresh.status = 'lobby';
+  fresh.usedLetters = [];
+  fresh.round = 0;
+  fresh.answers = {};
+  fresh.roundResults = null;
+  await setRoom(S.roomCode, fresh);
+  S.room = fresh;
+  S.submittedRound = -1;
+  render();
+}
+
+/* ============ POLLING / TIMERS ============ */
+function startPolling(){
+  if(S.pollHandle) clearInterval(S.pollHandle);
+  S.pollHandle = setInterval(async ()=>{
+    if(!S.roomCode) return;
+    const fresh = await getRoom(S.roomCode);
+    if(fresh){
+      const prevLetter = S.room ? S.room.letter : null;
+      const prevStatus = S.room ? S.room.status : null;
+      S.room = fresh;
+      if(fresh.status==='playing' && fresh.letter!==prevLetter) S.stampAnim=false;
+      if(fresh.status==='stopped' && S.submittedRound !== fresh.round){
+        submitAnswersIfNeeded();
+      }
+      if(prevStatus!==fresh.status) render();
+      else softUpdate();
+    }
+  }, 1000);
+
+  if(S.hostTickHandle) clearInterval(S.hostTickHandle);
+  S.hostTickHandle = setInterval(async ()=>{
+    if(!S.roomCode || !S.isHost || !S.room) return;
+    const r = S.room;
+    if(r.status==='playing' && r.settings){
+      const elapsed = (Date.now()-r.roundStartedAt)/1000;
+      if(elapsed >= r.settings.timeLimit){
+        const fresh = await getRoom(S.roomCode);
+        if(fresh && fresh.status==='playing'){
+          fresh.status='stopped'; fresh.stoppedBy=null;
+          fresh.stoppedAt=Date.now(); fresh.stopDeadline=Date.now()+1200;
+          await setRoom(S.roomCode, fresh);
+          S.room = fresh;
+          await submitAnswersIfNeeded();
+          render();
+        }
+      }
+    } else if(r.status==='stopped' && r.stopDeadline && Date.now()>=r.stopDeadline){
+      await hostFinalizeScoring();
+    }
+  }, 500);
+}
+
+/* soft update: just refresh timer/ring text without full re-render (avoids input focus loss) */
+function softUpdate(){
+  if(!S.room) return;
+  if(S.room.status==='playing'){
+    updateTimerUI();
+  }
+}
+function updateTimerUI(){
+  const r = S.room;
+  if(!r || r.status!=='playing' || !r.settings) return;
+  const elapsed = (Date.now()-r.roundStartedAt)/1000;
+  const remain = Math.max(0, r.settings.timeLimit - elapsed);
+  const el = document.getElementById('timerTxt');
+  const ring = document.getElementById('ringEl');
+  if(el) el.textContent = Math.ceil(remain)+'s';
+  if(el) el.classList.toggle('low', remain<=10);
+  if(ring) ring.style.setProperty('--progress', Math.max(0,remain/r.settings.timeLimit));
+}
+setInterval(()=>{ if(S.room && S.room.status==='playing') updateTimerUI(); }, 250);
+
+/* ============ RENDER ============ */
+function el(html){ const d=document.createElement('div'); d.innerHTML=html; return d.firstElementChild; }
+function root(){ return document.getElementById('app'); }
+
+function brandHeader(){
+  return `<div class="brand"><div class="mark">S!</div><div class="title">STOP<span>!</span> Online</div></div>`;
+}
+
+function render(){
+  const app = root();
+  if(!S.roomCode || !S.room){ app.innerHTML = renderHome(); attachHomeEvents(); return; }
+  const st = S.room.status;
+  if(st==='lobby') { app.innerHTML = renderLobby(); attachLobbyEvents(); }
+  else if(st==='playing') { app.innerHTML = renderPlaying(); attachPlayingEvents(); updateTimerUI(); }
+  else if(st==='stopped') { app.innerHTML = renderStopped(); }
+  else if(st==='results') { app.innerHTML = renderResults(); attachResultsEvents(); }
+  else if(st==='finished') { app.innerHTML = renderFinished(); attachFinishedEvents(); }
+}
+
+/* ---- HOME ---- */
+function renderHome(){
+  return `
+    ${brandHeader()}
+    <p class="muted" style="margin-bottom:16px;">Jogue Stop / Adedanha com até 4 amigos, cada um no seu celular. Crie uma sala ou entre com um código.</p>
+    <div class="card">
+      <label class="field-label">Seu nome</label>
+      <input id="nameInput" type="text" placeholder="Como te chamam no jogo?" value="${S.myName}" maxlength="18">
+    </div>
+    <div class="toggle-group">
+      <button class="toggle-btn ${S.homeMode==='create'?'active':''}" data-mode="create">Criar sala</button>
+      <button class="toggle-btn ${S.homeMode==='join'?'active':''}" data-mode="join">Entrar em sala</button>
+    </div>
+    ${S.homeMode==='create' ? `
+      <div class="card">
+        <p class="muted" style="margin-bottom:14px;">Você será o anfitrião: escolhe as categorias, o tempo e comanda as rodadas.</p>
+        <button class="btn btn-primary" id="createBtn">Criar nova sala</button>
+      </div>
+    ` : `
+      <div class="card">
+        <label class="field-label">Código da sala</label>
+        <input id="codeInput" type="text" placeholder="EX: A3F9" maxlength="4" style="text-transform:uppercase;letter-spacing:4px;font-family:'JetBrains Mono';" value="${S.joinCodeInput}">
+        <div style="height:12px;"></div>
+        <button class="btn btn-mint" id="joinBtn">Entrar na sala</button>
+      </div>
+    `}
+    <p class="hint">Mantenha esta aba aberta durante o jogo — a sincronização é automática.</p>
+    <p class="hint" style="margin-top:4px;opacity:.7;">Desenvolvido por Hugo Moreira.</p>
+  `;
+}
+function attachHomeEvents(){
+  const nameInput = document.getElementById('nameInput');
+  nameInput.oninput = e => S.myName = e.target.value;
+  document.querySelectorAll('.toggle-btn').forEach(b=>{
+    b.onclick = ()=>{ S.homeMode = b.dataset.mode; render(); };
+  });
+  const createBtn = document.getElementById('createBtn');
+  if(createBtn) createBtn.onclick = createRoom;
+  const joinBtn = document.getElementById('joinBtn');
+  const codeInput = document.getElementById('codeInput');
+  if(codeInput){
+    codeInput.oninput = e => { S.joinCodeInput = e.target.value.toUpperCase(); e.target.value = S.joinCodeInput; };
+  }
+  if(joinBtn) joinBtn.onclick = joinRoom;
+}
+
+/* ---- LOBBY ---- */
+function renderLobby(){
+  const r = S.room;
+  const players = r.players;
+  return `
+    ${brandHeader()}
+    <div class="room-code-box">
+      <div class="muted">Código da sala</div>
+      <div class="room-code">${r.code}</div>
+      <button class="btn btn-ghost btn-sm" id="copyBtn">Copiar código</button>
+    </div>
+    <div class="card">
+      <label class="field-label">Jogadores (${players.length}/4)</label>
+      ${players.map(p=>`
+        <div class="player-chip">
+          <div class="avatar" style="background:${avatarColor(p.id)}">${initials(p.name)}</div>
+          <div style="flex:1;font-weight:700;">${p.name}</div>
+          ${p.id===r.hostId?'<span class="badge-host">ANFITRIÃO</span>':''}
+        </div>
+      `).join('')}
+    </div>
+    ${S.isHost ? `
+      <div class="card">
+        <label class="field-label">Categorias</label>
+        <div class="cat-grid">
+          ${ALL_CATEGORIES.map(c=>`<button class="cat-chip ${S.localSettings.categories.includes(c)?'on':''}" data-cat="${c}">${c}</button>`).join('')}
+        </div>
+        <div style="height:14px;"></div>
+        <label class="field-label">Rodadas</label>
+        <div class="stepper">
+          <button data-step="rounds" data-dir="-1">−</button>
+          <div class="val" id="roundsVal">${S.localSettings.rounds}</div>
+          <button data-step="rounds" data-dir="1">+</button>
+        </div>
+        <div style="height:14px;"></div>
+        <label class="field-label">Tempo por rodada</label>
+        <div class="stepper">
+          <button data-step="time" data-dir="-1">−</button>
+          <div class="val" id="timeVal">${S.localSettings.timeLimit}s</div>
+          <button data-step="time" data-dir="1">+</button>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="startBtn" ${players.length<1?'disabled':''}>Iniciar jogo</button>
+      <p class="hint">Recomendado: 2 a 4 jogadores.</p>
+    ` : `
+      <div class="card center">
+        <p class="muted">Aguardando o anfitrião configurar e iniciar o jogo…</p>
+      </div>
+    `}
+  `;
+}
+function attachLobbyEvents(){
+  const copyBtn = document.getElementById('copyBtn');
+  if(copyBtn) copyBtn.onclick = ()=>{
+    try{ navigator.clipboard.writeText(S.room.code); showToast('Código copiado!'); }
+    catch(e){ showToast('Código: '+S.room.code); }
+  };
+  if(!S.isHost) return;
+  document.querySelectorAll('.cat-chip').forEach(b=>{
+    b.onclick = ()=> toggleCategory(b.dataset.cat);
+  });
+  document.querySelectorAll('[data-step]').forEach(b=>{
+    b.onclick = ()=>{
+      const dir = parseInt(b.dataset.dir);
+      if(b.dataset.step==='rounds'){
+        S.localSettings.rounds = Math.min(10, Math.max(1, S.localSettings.rounds+dir));
+        document.getElementById('roundsVal').textContent = S.localSettings.rounds;
+      } else {
+        S.localSettings.timeLimit = Math.min(180, Math.max(20, S.localSettings.timeLimit + dir*10));
+        document.getElementById('timeVal').textContent = S.localSettings.timeLimit + 's';
+      }
+    };
+  });
+  const startBtn = document.getElementById('startBtn');
+  if(startBtn) startBtn.onclick = startGame;
+}
+
+/* ---- PLAYING ---- */
+function renderPlaying(){
+  const r = S.room;
+  const cats = r.settings.categories;
+  S.stampAnim = true;
+  return `
+    <div class="scoreboard">
+      ${r.players.map(p=>`<div class="score-pill"><div class="avatar" style="width:22px;height:22px;font-size:10px;background:${avatarColor(p.id)}">${initials(p.name)}</div>${p.name.split(' ')[0]} <span class="pts">${p.score}</span></div>`).join('')}
+    </div>
+    <div class="hero">
+      <div class="ring-wrap">
+        <div class="ring" id="ringEl" style="--progress:1;">
+          <div class="letter-tile ${S.stampAnim?'flip':''}">${r.letter}</div>
+        </div>
+      </div>
+      <div class="timer-txt" id="timerTxt">${r.settings.timeLimit}s</div>
+      <div class="muted" style="margin-top:2px;">Rodada ${r.round} de ${r.settings.rounds}</div>
+    </div>
+    <div id="catForm">
+      ${cats.map((c,i)=>`
+        <div class="paper-card cat-input-card">
+          <label class="field-label">${c}</label>
+          <input type="text" data-cat="${c}" id="cat-${i}" placeholder="Começa com ${r.letter}..." autocomplete="off" value="${(S.draftAnswers[c]||'')}">
+        </div>
+      `).join('')}
+    </div>
+    <div class="stop-bar">
+      <button class="stop-btn" id="stopBtn">STOP!</button>
+    </div>
+  `;
+}
+function attachPlayingEvents(){
+  const inputs = document.querySelectorAll('#catForm input');
+  inputs.forEach((inp,i)=>{
+    inp.oninput = e => { S.draftAnswers[e.target.dataset.cat] = e.target.value; };
+    inp.onkeydown = e => {
+      if(e.key==='Enter'){
+        e.preventDefault();
+        const next = inputs[i+1];
+        if(next) next.focus(); else e.target.blur();
+      }
+    };
+  });
+  document.getElementById('stopBtn').onclick = pressStop;
+}
+
+/* ---- STOPPED (grace period) ---- */
+function renderStopped(){
+  const r = S.room;
+  return `
+    <div class="scoreboard">
+      ${r.players.map(p=>`<div class="score-pill"><div class="avatar" style="width:22px;height:22px;font-size:10px;background:${avatarColor(p.id)}">${initials(p.name)}</div>${p.name.split(' ')[0]} <span class="pts">${p.score}</span></div>`).join('')}
+    </div>
+    <div class="card center" style="margin-top:20px;padding:36px 18px;">
+      <div class="letter-tile" style="margin:0 auto 16px;">${r.letter}</div>
+      <h2 style="font-size:22px;">TEMPO!</h2>
+      <p class="muted" style="margin-top:8px;">${r.stoppedBy ? 'Alguém gritou STOP! ' : 'O tempo acabou! '}Enviando as respostas de todos...</p>
+    </div>
+  `;
+}
+
+/* ---- RESULTS ---- */
+function renderResults(){
+  const r = S.room;
+  const {details, roundPoints} = r.roundResults;
+  const sorted = [...r.players].sort((a,b)=>b.score-a.score);
+  return `
+    <div class="card center">
+      <div class="muted">Rodada ${r.round} de ${r.settings.rounds} · Letra</div>
+      <div class="letter-tile" style="margin:8px auto;">${r.letter}</div>
+    </div>
+    ${r.settings.categories.map(cat=>`
+      <div class="result-cat">
+        <h3>${cat}</h3>
+        ${r.players.map(p=>{
+          const d = details[cat][p.id] || {text:'',valid:false,points:0};
+          const cls = d.points===10?'p10':d.points===5?'p5':'p0';
+          return `
+            <div class="result-row ${!d.valid?'invalid':''}">
+              <div class="avatar" style="width:26px;height:26px;font-size:11px;background:${avatarColor(p.id)}">${initials(p.name)}</div>
+              <div class="ans">${d.text ? d.text : '<em style="color:#5c6690;">(em branco)</em>'}</div>
+              <div class="pts-chip ${cls}">+${d.points}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    `).join('')}
+    <div class="card">
+      <label class="field-label">Placar geral</label>
+      ${sorted.map((p,i)=>`
+        <div class="leader-row ${i===0?'top1':''}">
+          <div class="pos">${i+1}º</div>
+          <div class="avatar" style="background:${avatarColor(p.id)}">${initials(p.name)}</div>
+          <div class="nm">${p.name}</div>
+          <div class="sc">${p.score} pts</div>
+        </div>
+      `).join('')}
+    </div>
+    ${S.isHost ? `
+      <button class="btn btn-primary" id="nextBtn">${r.round>=r.settings.rounds?'Ver placar final':'Próxima rodada'}</button>
+    ` : `<p class="muted center">Aguardando o anfitrião continuar…</p>`}
+  `;
+}
+function attachResultsEvents(){
+  const btn = document.getElementById('nextBtn');
+  if(btn) btn.onclick = nextRoundOrFinish;
+}
+
+/* ---- FINISHED ---- */
+function renderFinished(){
+  const r = S.room;
+  const sorted = [...r.players].sort((a,b)=>b.score-a.score);
+  const winner = sorted[0];
+  return `
+    ${brandHeader()}
+    <div class="card center" style="padding:30px 18px;">
+      <div style="font-size:44px;margin-bottom:6px;">🏆</div>
+      <h2 style="font-size:22px;">${winner.name} venceu!</h2>
+      <p class="muted" style="margin-top:6px;">com ${winner.score} pontos em ${r.settings.rounds} rodadas</p>
+    </div>
+    <div class="card">
+      <label class="field-label">Placar final</label>
+      ${sorted.map((p,i)=>`
+        <div class="leader-row ${i===0?'top1':''}">
+          <div class="pos">${i+1}º</div>
+          <div class="avatar" style="background:${avatarColor(p.id)}">${initials(p.name)}</div>
+          <div class="nm">${p.name}</div>
+          <div class="sc">${p.score} pts</div>
+        </div>
+      `).join('')}
+    </div>
+    ${S.isHost ? `<button class="btn btn-primary" id="restartBtn">Jogar de novo (mesma sala)</button>` : `<p class="muted center">Aguardando o anfitrião…</p>`}
+  `;
+}
+function attachFinishedEvents(){
+  const btn = document.getElementById('restartBtn');
+  if(btn) btn.onclick = restartGame;
+}
+
+/* ============ INIT ============ */
+render();
+</script>
+</body>
+</html>
