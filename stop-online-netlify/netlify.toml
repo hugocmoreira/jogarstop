@@ -1,9 +1,0 @@
-[build]
-  functions = "netlify/functions"
-  publish = "."
-
-[[redirects]]
-  from = "/api/room"
-  to = "/.netlify/functions/room"
-  status = 200
-  force = true

@@ -1,9 +1,0 @@
-{
-  "name": "stop-online",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Jogo Stop / Adedanha multiplayer, sincronizado via Netlify Blobs.",
-  "dependencies": {
-    "@netlify/blobs": "^8.1.0"
-  }
-}
